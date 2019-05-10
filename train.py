@@ -11,6 +11,9 @@ from PIL import ImageFile, Image
 from itertools import islice
 import argparse
 
+ImageFile.LOAD_TRUNCATED_IMAGES=True
+
+
 def save_model(model, optim, epoch, folder, i):
     """
     Saves the model so that we can continue training.
