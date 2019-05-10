@@ -72,12 +72,12 @@ class MesoNet(nn.Module):
         x = self.fc2(x)
 
         x = self.sigmoid(x)
-        print(x)
+        # print(x)
 
         return x
 
 
 
-input = torch.rand(1,3,256,256)
-net = MesoNet(1)
-output = net.forward(input)
+# input = torch.rand(1,3,256,256)
+# net = MesoNet(1)
+# output = net.forward(input)
