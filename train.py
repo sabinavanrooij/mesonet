@@ -42,7 +42,7 @@ def accuracy_bce(predictions, targets):
 
 def main(args):
     net = MesoNet(args.batch_size)
-    optimizer = optim.Adam(net.parameters(), lr=0.001)
+    optimizer = optim.Adam(net.parameters(), lr=0.005)
 
     if not args.mix:
         if args.test:
@@ -155,6 +155,8 @@ def main(args):
                     # run model
                     pred = net(batch)
 
+                    pred = pred.squeeze()
+
                     acc = accuracy_bce(pred,labels)
                     print(acc)
                     epoch_acc.append(acc)
@@ -171,7 +173,7 @@ def main(args):
 
                 total_loss = loss_bce
 
-                print('loss: ', total_loss.item())
+                # print('loss: ', total_loss.item())
                 losses.append(total_loss.item())
                 epoch_loss.append(total_loss.item())
 
@@ -179,7 +181,7 @@ def main(args):
                 optimizer.step()
 
                 acc = accuracy_bce(pred,labels)
-                print('accuracy: ',acc)
+                # print('accuracy: ',acc)
 
                 epoch_acc.append(acc)
 
@@ -194,14 +196,14 @@ def main(args):
                     print('loss:',total_loss.item())
                     print('acc:', acc)
 
-                    # if args.resume:
-                    #     save_model(net, optimizer, epoch + 10, args.models_folder, i)
-                    #     with open('losses_epoch_{}_{}.pkl'.format(str(epoch + 10), str(i)), 'wb') as f:
-                    #         pickle.dump(losses, f)
-                    # else:
-                    #     save_model(net, optimizer, epoch, args.models_folder, i)
-                    #     with open('losses_epoch_{}_{}.pkl'.format(str(epoch), str(i)), 'wb') as f:
-                    #         pickle.dump(losses, f)
+                    if args.resume:
+                        save_model(net, optimizer, epoch + 10, args.models_folder, i)
+                        with open('losses_epoch_{}_{}.pkl'.format(str(epoch + 10), str(i)), 'wb') as f:
+                            pickle.dump(losses, f)
+                    else:
+                        save_model(net, optimizer, epoch, args.models_folder, i)
+                        # with open('losses_epoch_{}_{}.pkl'.format(str(epoch), str(i)), 'wb') as f:
+                        #     pickle.dump(losses, f)
 
 
         accuracy_list.append(np.mean(epoch_acc))
@@ -218,21 +220,21 @@ def main(args):
 
 
 
-    # if not args.test:
-    #     save_model(net, optimizer, epoch, args.models_folder, i)
+    if not args.test:
+        save_model(net, optimizer, epoch, args.models_folder, i)
 
-    #     with open('losses_final.pkl', 'wb') as f:
-    #         pickle.dump(losses, f)
+        with open('losses_final.pkl', 'wb') as f:
+            pickle.dump(losses, f)
 
-    #     with open('avg_losses_per_epoch.pkl','wb') as f:
-    #         pickle.dump(avg_losses_per_epoch,f)
+        with open('avg_losses_per_epoch.pkl','wb') as f:
+            pickle.dump(avg_losses_per_epoch,f)
 
-    #     with open('accs_per_epoch.pkl','wb') as f:
-    #         pickle.dump(accuracy_list,f)
+        with open('accs_per_epoch.pkl','wb') as f:
+            pickle.dump(accuracy_list,f)
 
-    # else:
-    #     with open('test_accs_per_epoch.pkl','wb') as f:
-    #         pickle.dump(accuracy_list,f)
+    else:
+        with open('test_accs_per_epoch.pkl','wb') as f:
+            pickle.dump(accuracy_list,f)
 
 
 
