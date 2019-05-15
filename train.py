@@ -89,7 +89,7 @@ def main(args):
     for epoch in range(args.max_epochs):
 
         if args.resume:
-            print('Epoch: ', epoch + 10)
+            print('Epoch: ', epoch + 40)
         else:
             print('Epoch: ', epoch)
 
@@ -197,8 +197,8 @@ def main(args):
                     print('acc:', acc)
 
                     if args.resume:
-                        save_model(net, optimizer, epoch + 10, args.models_folder, i)
-                        with open('losses_epoch_{}_{}.pkl'.format(str(epoch + 10), str(i)), 'wb') as f:
+                        save_model(net, optimizer, epoch + 40, args.models_folder, i)
+                        with open('losses_epoch_{}_{}.pkl'.format(str(epoch + 40), str(i)), 'wb') as f:
                             pickle.dump(losses, f)
                     else:
                         save_model(net, optimizer, epoch, args.models_folder, i)
@@ -221,7 +221,10 @@ def main(args):
 
 
     if not args.test:
-        save_model(net, optimizer, epoch, args.models_folder, i)
+        if args.resume:
+            save_model(net, optimizer, epoch+40, args.models_folder, i)
+        else:
+            save_model(net, optimizer, epoch, args.models_folder, i)
 
         with open('losses_final.pkl', 'wb') as f:
             pickle.dump(losses, f)
